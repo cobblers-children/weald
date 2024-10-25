@@ -3,7 +3,7 @@ defmodule WealdWeb.TimerLive do
 
   def mount(_params, _session, socket) do
     {:ok, socket
-      |> assign(%{ prompt: "Start" })
+      |> assign(%{ startPrompt: "Start", pausePrompt: "    " })
       |> setTime(25 * 60)}
   end
 
@@ -11,12 +11,19 @@ defmodule WealdWeb.TimerLive do
     {:noreply, startTimer(socket, 25 * 60)}
   end
 
+  def handle_event("pause", _params, socket) do
+    {:noreply, pauseResume(socket)}
+  end
+
   def render(assigns) do
     ~H"""
     <div>
       <%= @text %>
     </div>
-    <div><button phx-click="start"><%= @prompt %></button></div>
+    <div>
+      <button phx-click="start"><%= @startPrompt %></button>
+      <button phx-click="pause"><%= @pausePrompt %></button>
+    </div>
     """
   end
 
@@ -38,7 +45,7 @@ defmodule WealdWeb.TimerLive do
   end
 
   def startTimer(socket, time) do
-    {ok, timer} = :timer.send_interval(1000, self(), :tick)
+    {_ok, timer} = :timer.send_interval(1000, self(), :tick)
 
     if (socket.private[:timer]) do
       IO.inspect(:timer.cancel(socket.private.timer))
@@ -46,6 +53,18 @@ defmodule WealdWeb.TimerLive do
 
     %{socket | private: Map.put(socket.private, :timer, timer)}
       |> setTime(time)
-      |> assign(%{ prompt: "Restart" })
+      |> assign(%{ startPrompt: "Restart" })
+      |> assign(%{ pausePrompt: "Pause" })
+  end
+
+  def pauseResume(socket) do
+    if (socket.private[:timer]) do
+      IO.inspect(:timer.cancel(socket.private.timer))
+
+      %{socket | private: Map.delete(socket.private, :timer)}
+        |> assign(%{ pausePrompt: "Continue" })
+    else
+      startTimer(socket, socket.assigns.seconds)
+    end
   end
 end
