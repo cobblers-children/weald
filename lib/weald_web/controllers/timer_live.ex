@@ -3,7 +3,7 @@ defmodule WealdWeb.TimerLive do
 
   def mount(_params, _session, socket) do
     {:ok, socket
-      |> assign(%{ startPrompt: "Start", pausePrompt: "    " })
+      |> assign(%{ startPrompt: "Start", pausePrompt: nil })
       |> setTime(25 * 60)}
   end
 
@@ -22,7 +22,7 @@ defmodule WealdWeb.TimerLive do
     </div>
     <div>
       <button phx-click="start"><%= @startPrompt %></button>
-      <button phx-click="pause"><%= @pausePrompt %></button>
+      <button phx-click="pause" :if={@pausePrompt != nil}><%= @pausePrompt %></button>
     </div>
     """
   end
