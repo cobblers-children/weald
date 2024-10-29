@@ -7,6 +7,7 @@
 .time {
     font-family: ui-monospace, SFMono-Regular;
     padding: 3rem 1rem 2rem;
+    margin: 10px;
 }
 
 .pomodoro {
@@ -15,4 +16,8 @@
 
 .break {
     background-color: #7af;
+}
+
+.pomodoro, .break {
+    border-radius: 8px;
 }
