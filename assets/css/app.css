@@ -5,5 +5,14 @@
 /* This file is for your main application CSS */
 
 .time {
-    font-family: ui-monospace, SFMono-Regular
+    font-family: ui-monospace, SFMono-Regular;
+    padding: 3rem 1rem 2rem;
+}
+
+.pomodoro {
+    background-color: #f88;
+}
+
+.break {
+    background-color: #7af;
 }
