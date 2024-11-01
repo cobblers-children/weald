@@ -11,7 +11,7 @@ defmodule WealdWeb.TimerLive do
   def render(assigns) do
     ~H"""
     <div class={@phase}>
-      <div class="time text-9xl text-right">
+      <div class="time text-9xl text-right tabular-nums">
         <%= @text %>
       </div>
     </div>
@@ -56,11 +56,11 @@ defmodule WealdWeb.TimerLive do
   def finishTimer(socket) do
     if (socket.assigns.phase == "pomodoro") do
       cancelTimer(socket)
-        |> assign(%{ prompt: "Start", action: "start", phase: "break" })
+        |> assign(%{ prompt: "Start Break", action: "start", phase: "break" })
         |> setTime(5 * 60)
     else
       cancelTimer(socket)
-        |> assign(%{ prompt: "Start", action: "start", phase: "pomodoro" })
+        |> assign(%{ prompt: "Start Pomodoro", action: "start", phase: "pomodoro" })
         |> setTime(25 * 60)
     end
 

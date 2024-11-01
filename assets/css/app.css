@@ -5,8 +5,7 @@
 /* This file is for your main application CSS */
 
 .time {
-    font-family: ui-monospace, SFMono-Regular;
-    padding: 3rem 1rem 2rem;
+    padding: 3rem 1rem 3rem;
     margin: 10px;
 }
 
@@ -15,7 +14,7 @@
 }
 
 .break {
-    background-color: #7af;
+    background-color: #7bf;
 }
 
 .pomodoro, .break {
