@@ -22,10 +22,36 @@ import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 
+let hooks = {
+  Countdown: {
+    mounted() {
+      window.addEventListener(
+              "phx:timer-end",
+              e => {
+                let notification = new Notification("Weald: Pomodoro", {
+                  body: e.detail.message,
+                  renotify: true,
+                  requireInteraction: true,
+                  silent: false,
+                  vibrate: true
+                });
+              }
+      );
+
+      this.el.addEventListener("click", () => {
+        Notification.requestPermission().then(result => {
+          console.log(result)
+        });
+      });
+    }
+  }
+};
+
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {
   longPollFallbackMs: 2500,
-  params: {_csrf_token: csrfToken}
+  params: {_csrf_token: csrfToken},
+  hooks
 })
 
 // Show progress bar on live navigation and form submits

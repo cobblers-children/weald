@@ -3,20 +3,20 @@ defmodule WealdWeb.TimerLive do
 
   def mount(_params, _session, socket) do
     {:ok, socket
-      |> assign(%{ phase: nil})
-      |> finishTimer()
+      |> assign(%{ prompt: "Start Pomodoro", action: "start", phase: "pomodoro" })
+      |> setTime(25 * 60)
     }
   end
 
   def render(assigns) do
     ~H"""
-    <div class={@phase}>
+    <div class={@phase} phx-click={@action}>
       <div class="time text-9xl text-right tabular-nums">
         <%= @text %>
       </div>
     </div>
     <div class="text-right">
-      <button class="text-2xl" phx-click={@action}><%= @prompt %></button>
+      <button id="pomodoro" phx-click={@action} phx-hook="Countdown" class="text-2xl"><%= @prompt %></button>
     </div>
     """
   end
@@ -58,10 +58,12 @@ defmodule WealdWeb.TimerLive do
       cancelTimer(socket)
         |> assign(%{ prompt: "Start Break", action: "start", phase: "break" })
         |> setTime(5 * 60)
+        |> push_event("timer-end", %{message: "Time for a break."})
     else
       cancelTimer(socket)
         |> assign(%{ prompt: "Start Pomodoro", action: "start", phase: "pomodoro" })
         |> setTime(25 * 60)
+        |> push_event("timer-end", %{message: "Break time is over."})
     end
 
   end
