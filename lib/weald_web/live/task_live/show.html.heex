@@ -1,6 +1,8 @@
 <.header>
-  Task <%= @task.id %>
+  <%= @task.description %>
   <:subtitle>This is a task record from your database.</:subtitle>
+
+
   <:actions>
     <.link patch={~p"/tasks/#{@task}/show/edit"} phx-click={JS.push_focus()}>
       <.button>Edit task</.button>
@@ -9,7 +11,6 @@
 </.header>
 
 <.list>
-  <:item title="Description"><%= @task.description %></:item>
   <:item title="Status"><%= @task.status %></:item>
   <:item title="Created at"><%= @task.inserted_at %></:item>
   <:item title="Started at"><%= @task.started_at %></:item>

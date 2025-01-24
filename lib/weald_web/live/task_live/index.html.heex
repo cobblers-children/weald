@@ -22,18 +22,11 @@
       <.link navigate={~p"/tasks/#{task}"}>Show</.link>
     </div>
     <.link patch={~p"/tasks/#{task}/edit"}>Edit</.link>
-  </:action>
-  <:action :let={{id, task}}>
-    <.link
-      phx-click={JS.push("delete", value: %{id: task.id}) |> hide("##{id}")}
-      data-confirm="Are you sure?"
-    >
-      Delete
-    </.link>
+    <.link patch={~p"/tasks/#{task}/delete"}>Delete</.link>
   </:action>
 </.table>
 
-<.modal :if={@live_action in [:new, :edit]} id="task-modal" show on_cancel={JS.patch(~p"/tasks")}>
+<.modal :if={@live_action in [:new, :edit, :delete]} id="task-modal" show on_cancel={JS.patch(~p"/tasks")}>
   <.live_component
     module={WealdWeb.TaskLive.FormComponent}
     id={@task.id || :new}

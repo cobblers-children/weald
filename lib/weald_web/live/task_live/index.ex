@@ -20,6 +20,12 @@ defmodule WealdWeb.TaskLive.Index do
     |> assign(:task, Tasks.get_task!(id))
   end
 
+  defp apply_action(socket, :delete, %{"id" => id}) do
+    socket
+    |> assign(:page_title, "Delete Task")
+    |> assign(:task, Tasks.get_task!(id))
+  end
+
   defp apply_action(socket, :new, _params) do
     socket
     |> assign(:page_title, "New Task")
@@ -38,10 +44,7 @@ defmodule WealdWeb.TaskLive.Index do
   end
 
   @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
-    task = Tasks.get_task!(id)
-    {:ok, _} = Tasks.delete_task(task)
-
+  def handle_info({WealdWeb.TaskLive.FormComponent, {:deleted, task}}, socket) do
     {:noreply, stream_delete(socket, :tasks, task)}
   end
 end

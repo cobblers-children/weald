@@ -23,6 +23,7 @@ defmodule WealdWeb.Router do
     live "/tasks", TaskLive.Index, :index
     live "/tasks/new", TaskLive.Index, :new
     live "/tasks/:id/edit", TaskLive.Index, :edit
+    live "/tasks/:id/delete", TaskLive.Index, :delete
 
     live "/tasks/:id", TaskLive.Show, :show
     live "/tasks/:id/show/edit", TaskLive.Show, :edit
