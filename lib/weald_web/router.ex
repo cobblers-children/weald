@@ -18,7 +18,13 @@ defmodule WealdWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
-    live "/pomodoro", TimerLive, :index
+
+    live "/pomodoro", PomodoroLive.Index, :index
+    live "/pomodoro/new", PomodoroLive.Index, :new
+    live "/pomodoro/:id/edit", PomodoroLive.Index, :edit
+
+    live "/pomodoro/:id", PomodoroLive.Show, :show
+    live "/pomodoro/:id/show/edit", PomodoroLive.Show, :edit
 
     live "/tasks", TaskLive.Index, :index
     live "/tasks/new", TaskLive.Index, :new

@@ -1,0 +1,43 @@
+<.header>
+  Listing Pomodoro
+  <:actions>
+    <.link patch={~p"/pomodoro/new"}>
+      <.button>New Pomodoro</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="pomodoro"
+  rows={@streams.pomodoro_collection}
+  row_click={fn {_id, pomodoro} -> JS.navigate(~p"/pomodoro/#{pomodoro}") end}
+>
+  <:col :let={{_id, pomodoro}} label="Remaining"><%= pomodoro.remaining %></:col>
+  <:col :let={{_id, pomodoro}} label="Done at"><%= pomodoro.done_at %></:col>
+  <:col :let={{_id, pomodoro}} label="Finished at"><%= pomodoro.finished_at %></:col>
+  <:action :let={{_id, pomodoro}}>
+    <div class="sr-only">
+      <.link navigate={~p"/pomodoro/#{pomodoro}"}>Show</.link>
+    </div>
+    <.link patch={~p"/pomodoro/#{pomodoro}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, pomodoro}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: pomodoro.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="pomodoro-modal" show on_cancel={JS.patch(~p"/pomodoro")}>
+  <.live_component
+    module={WealdWeb.PomodoroLive.FormComponent}
+    id={@pomodoro.id || :new}
+    title={@page_title}
+    action={@live_action}
+    pomodoro={@pomodoro}
+    patch={~p"/pomodoro"}
+  />
+</.modal>

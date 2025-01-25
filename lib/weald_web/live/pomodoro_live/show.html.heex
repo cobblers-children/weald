@@ -1,0 +1,28 @@
+<.header>
+  Pomodoro <%= @pomodoro.id %>
+  <:subtitle>This is a pomodoro record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/pomodoro/#{@pomodoro}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit pomodoro</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Remaining"><%= @pomodoro.remaining %></:item>
+  <:item title="Done at"><%= @pomodoro.done_at %></:item>
+  <:item title="Finished at"><%= @pomodoro.finished_at %></:item>
+</.list>
+
+<.back navigate={~p"/pomodoro"}>Back to pomodoro</.back>
+
+<.modal :if={@live_action == :edit} id="pomodoro-modal" show on_cancel={JS.patch(~p"/pomodoro/#{@pomodoro}")}>
+  <.live_component
+    module={WealdWeb.PomodoroLive.FormComponent}
+    id={@pomodoro.id}
+    title={@page_title}
+    action={@live_action}
+    pomodoro={@pomodoro}
+    patch={~p"/pomodoro/#{@pomodoro}"}
+  />
+</.modal>
