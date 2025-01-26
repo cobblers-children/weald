@@ -26,6 +26,8 @@ defmodule WealdWeb.Router do
     live "/pomodoro/:id", PomodoroLive.Show, :show
     live "/pomodoro/:id/show/edit", PomodoroLive.Show, :edit
 
+    live "/pomodoro/timer", TimerLive, :index
+
     live "/tasks", TaskLive.Index, :index
     live "/tasks/new", TaskLive.Index, :new
     live "/tasks/:id/edit", TaskLive.Index, :edit
