@@ -9,11 +9,7 @@
       </p>
     </div>
     <div class="flex items-center gap-4 font-semibold leading-6 text-zinc-900">
-      <.link
-        patch={~p"/pomodoro/new"}
-      >
-        New Pomodoro
-      </.link>
+      <%= live_render(@socket, WealdWeb.TimerLive, id: "timer") %>
       <a href="https://twitter.com/elixirphoenix" class="hover:text-zinc-700">
         @elixirphoenix
       </a>

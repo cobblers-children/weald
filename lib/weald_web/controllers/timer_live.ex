@@ -3,20 +3,36 @@ defmodule WealdWeb.TimerLive do
 
   def mount(_params, _session, socket) do
     {:ok, socket
-      |> assign(%{ prompt: "Start Pomodoro", action: "start", phase: "pomodoro" })
-      |> setTime(25 * 60)
+      |> resetClock()
     }
   end
 
   def render(assigns) do
     ~H"""
-    <div class={@phase} phx-click={@action}>
-      <div class="time text-9xl text-right tabular-nums">
-        <%= @text %>
-      </div>
-    </div>
-    <div class="text-right">
-      <button id="pomodoro" phx-click={@action} phx-hook="Countdown" class="text-2xl"><%= @prompt %></button>
+    <div>
+      <.link
+        phx-click={WealdWeb.CoreComponents.show_modal("timer-modal")}
+      >
+        <div :if={!@mini}>
+          New Pomodoro
+        </div>
+        <div :if={@mini} class={@phase}>
+          <div class="time tabular-nums">
+            <%= @text %>
+          </div>
+        </div>
+      </.link>
+
+      <.modal id="timer-modal">
+        <div class={@phase} phx-click={@action}>
+          <div class="time text-9xl text-right tabular-nums">
+            <%= @text %>
+          </div>
+        </div>
+        <div class="text-right">
+          <button id="pomodoro" phx-click={@action} phx-hook="Countdown" class="text-2xl"><%= @prompt %></button>
+        </div>
+      </.modal>
     </div>
     """
   end
@@ -50,7 +66,7 @@ defmodule WealdWeb.TimerLive do
     {_ok, timer} = :timer.send_interval(1000, self(), :tick)
 
     %{socket | private: Map.put(socket.private, :timer, timer)}
-      |> assign(%{ prompt: "Pause", action: "pause" })
+      |> assign(%{ prompt: "Pause", action: "pause", mini: true })
   end
 
   def finishTimer(socket) do
@@ -61,11 +77,16 @@ defmodule WealdWeb.TimerLive do
         |> push_event("timer-end", %{message: "Time for a break."})
     else
       cancelTimer(socket)
-        |> assign(%{ prompt: "Start Pomodoro", action: "start", phase: "pomodoro" })
-        |> setTime(25 * 60)
+        |> resetClock()
         |> push_event("timer-end", %{message: "Break time is over."})
     end
 
+  end
+
+  def resetClock(socket) do
+    socket
+      |> assign(%{ prompt: "Start Pomodoro", action: "start", phase: "pomodoro", mini: false})
+      |> setTime(25 * 60)
   end
 
   def pauseResume(socket) do
