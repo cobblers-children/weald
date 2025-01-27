@@ -5,6 +5,7 @@
 /* This file is for your main application CSS */
 
 .time {
+    border-radius: 8px;
     padding: .75em 0.5em;
 }
 
@@ -14,8 +15,4 @@
 
 .break {
     background-color: #6bf;
-}
-
-.pomodoro, .break {
-    border-radius: 8px;
 }

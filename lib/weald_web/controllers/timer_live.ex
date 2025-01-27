@@ -16,18 +16,16 @@ defmodule WealdWeb.TimerLive do
         <div :if={!@mini}>
           New Pomodoro
         </div>
-        <div :if={@mini} class={@phase}>
-          <div class="time tabular-nums">
+        <div :if={@mini} class={"time " <> @phase}>
+          <div class="tabular-nums">
             <%= @text %>
           </div>
         </div>
       </.link>
 
       <.modal id="timer-modal">
-        <div class={@phase} phx-click={@action}>
-          <div class="time text-9xl text-right tabular-nums">
-            <%= @text %>
-          </div>
+        <div class={@phase <> " time text-6xl sm:text-9xl text-right tabular-nums"} phx-click={@action}>
+          <%= @text %>
         </div>
         <div class="text-right">
           <button id="pomodoro" phx-click={@action} phx-hook="Countdown" class="text-2xl"><%= @prompt %></button>
@@ -66,7 +64,7 @@ defmodule WealdWeb.TimerLive do
     {_ok, timer} = :timer.send_interval(1000, self(), :tick)
 
     %{socket | private: Map.put(socket.private, :timer, timer)}
-      |> assign(%{ prompt: "Pause", action: "pause", mini: true })
+      |> assign(%{ prompt: "Pause", action: "pause", mini: true, paused: false })
   end
 
   def finishTimer(socket) do
@@ -93,7 +91,7 @@ defmodule WealdWeb.TimerLive do
     if (socket.private[:timer]) do
       socket
         |> cancelTimer()
-        |> assign(%{ prompt: "Resume", action: "pause" })
+        |> assign(%{ prompt: "Resume", action: "pause", paused: true })
     else
       startTimer(socket)
     end
