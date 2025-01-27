@@ -9,22 +9,27 @@ defmodule WealdWeb.TimerLive do
 
   def render(assigns) do
     ~H"""
-    <div>
+    <div class="text-lg">
       <.link
         phx-click={WealdWeb.CoreComponents.show_modal("timer-modal")}
       >
         <div :if={!@mini}>
           New Pomodoro
         </div>
-        <div :if={@mini} class={"time " <> @phase}>
-          <div class="tabular-nums">
+        <div :if={@mini}
+          class={["time",
+                  @phase,
+                  @paused && "animate-pulse"
+                ]}
+        >
+          <div class="text-2xl tabular-nums">
             <%= @text %>
           </div>
         </div>
       </.link>
 
       <.modal id="timer-modal">
-        <div class={@phase <> " time text-6xl sm:text-9xl text-right tabular-nums"} phx-click={@action}>
+        <div class={["time", @phase, "text-6xl sm:text-9xl text-right tabular-nums"]} phx-click={@action}>
           <%= @text %>
         </div>
         <div class="text-right">
