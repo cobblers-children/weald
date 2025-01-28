@@ -1,10 +1,5 @@
 <.header>
   Listing Pomodoro
-  <:actions>
-    <.link patch={~p"/pomodoro/new"}>
-      <.button>New Pomodoro</.button>
-    </.link>
-  </:actions>
 </.header>
 
 <.table
@@ -31,6 +26,13 @@
   </:action>
 </.table>
 
-<.modal :if={@live_action in [:new, :edit]} id="pomodoro-modal" show>
-    <%= live_render(@socket, WealdWeb.TimerLive, id: "timer") %>
+<.modal :if={@live_action in [:new, :edit]} id="pomodoro-modal" show on_cancel={JS.patch(~p"/pomodoro")}>
+  <.live_component
+    module={WealdWeb.PomodoroLive.FormComponent}
+    id={@pomodoro.id || :new}
+    title={@page_title}
+    action={@live_action}
+    pomodoro={@pomodoro}
+    patch={~p"/pomodoro"}
+  />
 </.modal>

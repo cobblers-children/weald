@@ -20,7 +20,6 @@ defmodule WealdWeb.Router do
     get "/", PageController, :home
 
     live "/pomodoro", PomodoroLive.Index, :index
-    live "/pomodoro/new", PomodoroLive.Index, :new
     live "/pomodoro/:id/edit", PomodoroLive.Index, :edit
 
     live "/pomodoro/:id", PomodoroLive.Show, :show

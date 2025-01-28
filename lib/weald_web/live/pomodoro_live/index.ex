@@ -20,12 +20,6 @@ defmodule WealdWeb.PomodoroLive.Index do
     |> assign(:pomodoro, Pomodori.get_pomodoro!(id))
   end
 
-  defp apply_action(socket, :new, _params) do
-    socket
-    |> assign(:page_title, "New Pomodoro")
-    |> assign(:pomodoro, %Pomodoro{})
-  end
-
   defp apply_action(socket, :index, _params) do
     socket
     |> assign(:page_title, "Listing Pomodoro")
