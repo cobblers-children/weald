@@ -4,7 +4,7 @@
     <div class="flex items-center gap-4">
     </div>
     <div class="flex items-center gap-4 font-semibold leading-6 text-zinc-900">
-      <%= live_render(@socket, WealdWeb.TimerLive, id: "timer") %>
+      <%= assigns[:socket] && live_render(@socket, WealdWeb.TimerLive, id: "timer") %>
     </div>
   </div>
 </header>
