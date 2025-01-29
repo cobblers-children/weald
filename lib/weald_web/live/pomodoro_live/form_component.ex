@@ -19,8 +19,8 @@ defmodule WealdWeb.PomodoroLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@form[:remaining]} type="time" label="Remaining" />
-        <.input field={@form[:done_at]} type="datetime-local" label="Done at" />
+        <.input field={@form[:remaining]} type="number" label="Remaining" />
+        <.input field={@form[:due_at]} type="datetime-local" label="Due at" />
         <.input field={@form[:finished_at]} type="datetime-local" label="Finished at" />
         <:actions>
           <.button phx-disable-with="Saving...">Save Pomodoro</.button>
