@@ -1,22 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 108" fill="currentColor" aria-hidden="true">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 110" fill="currentColor" aria-hidden="true">
   <path
     d="
-      m 76 69
-      a 40 40 0 1 0 -58 0
-      l 30 38
+      m 75 68
+      a 40 40 0 1 0 -62 0
+      l 31 40
     Z"
     fill="#116611"
   />
   <path
     d="
-      m 51 67
-      a 28 27 0 1 0 -8 0
-      l 0 -16
-      l -13 0
-      l 17 -30
-      l 17 30
-      l -13 0
+      m 48 71
+      a 28 29 0 1 0 -8 0
+      l 0 -17
+      l -14 0
+      l 18 -32
+      l 18 32
+      l -14 0
     Z"
-          fill="#f9f9f9"
+    fill="#f9f9f9"
   />
 </svg>

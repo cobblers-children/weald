@@ -1,21 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor" aria-hidden="true">
   <path
     d="
-      m 53 45
-      a 27 27 0 1 0 -42 0
-      l 21 18
+      m 52 46
+      a 27 27 0 1 0 -40 0
+      l 20 18
     Z"
-    fill="#116611"
+    fill="#117711"
   />
   <path
     d="
       m 36 47
-      a 19 20 0 1 0 -8 0
-      l 0 -12
-      l -9 0
-      l 13 -24
-      l 13 24
-      l -9 0
+      a 19 19 0 1 0 -8 0
+      l 0 -11
+      l -10 0
+      l 14 -23
+      l 14 23
+      l -10 0
     Z"
     fill="#f9f9f9"
   />
