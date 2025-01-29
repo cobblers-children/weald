@@ -14,6 +14,6 @@ defmodule Weald.Pomodori.Pomodoro do
   def changeset(pomodoro, attrs) do
     pomodoro
     |> cast(attrs, [:remaining, :due_at, :finished_at])
-    |> validate_required([:remaining, :due_at, :finished_at])
+    |> validate_required([:remaining, :due_at])
   end
 end

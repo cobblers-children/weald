@@ -22,9 +22,6 @@ defmodule WealdWeb.PomodoroLive.FormComponent do
         <.input field={@form[:remaining]} type="number" label="Remaining" />
         <.input field={@form[:due_at]} type="datetime-local" label="Due at" />
         <.input field={@form[:finished_at]} type="datetime-local" label="Finished at" />
-        <:actions>
-          <.button phx-disable-with="Saving...">Save Pomodoro</.button>
-        </:actions>
       </.simple_form>
     </div>
     """

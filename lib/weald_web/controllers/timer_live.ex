@@ -1,6 +1,8 @@
 defmodule WealdWeb.TimerLive do
   use WealdWeb, :live_view
 
+  alias Weald.Pomodori
+
   def mount(_params, _session, socket) do
     {:ok, socket
       |> resetClock()
@@ -41,7 +43,28 @@ defmodule WealdWeb.TimerLive do
   end
 
   def handle_event("start", _params, socket) do
-    {:noreply, startTimer(socket)}
+    if (!Map.has_key?(socket.assigns, "pomodoro")) do
+      remaining = socket.assigns.seconds
+
+      data = %{
+        remaining: remaining,
+        due_at: DateTime.add(DateTime.utc_now(), remaining)
+      }
+
+      case Pomodori.create_pomodoro(data) do
+        {:ok, pomodoro} ->
+          {:noreply, socket
+                     |> assign(:pomodoro, pomodoro)
+                     |> startTimer()}
+
+        {:error, %Ecto.Changeset{} = changeset} ->
+          IO.inspect(changeset)
+          {:noreply, socket}
+      end
+    else
+#      TODO: calculate unpause time
+      {:noreply, startTimer(socket)}
+    end
   end
 
   def handle_event("pause", _params, socket) do
