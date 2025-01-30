@@ -6,7 +6,7 @@ defmodule WealdWeb.TimerLive do
 
 
   def mount(_params, _session, socket) do
-    results = Pomodori.find_running()
+    results = Pomodori.list_incomplete()
     pomodoro = List.first(results, %Pomodoro{})
 
     pomodoro = update_remaining(pomodoro)
