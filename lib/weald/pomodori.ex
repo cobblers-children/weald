@@ -21,6 +21,12 @@ defmodule Weald.Pomodori do
     Repo.all(Pomodoro)
   end
 
+  def find_running do
+    query = from p in Pomodoro, where: (p.running == true) and (p.stage == :pomodoro or p.stage == :break)
+
+    Repo.all(query)
+  end
+
   @doc """
   Gets a single pomodoro.
 

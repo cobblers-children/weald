@@ -4,9 +4,9 @@ defmodule WealdWeb.PomodoroLiveTest do
   import Phoenix.LiveViewTest
   import Weald.PomodoriFixtures
 
-  @create_attrs %{remaining: 42, due_at: "2025-01-28T06:35:00Z", finished_at: "2025-01-28T06:35:00Z"}
-  @update_attrs %{remaining: 43, due_at: "2025-01-29T06:35:00Z", finished_at: "2025-01-29T06:35:00Z"}
-  @invalid_attrs %{remaining: nil, due_at: nil, finished_at: nil}
+  @create_attrs %{running: true, stage: :pomodoro, remaining: 42, due_at: "2025-01-28T23:03:00Z", finished_at: "2025-01-28T23:03:00Z"}
+  @update_attrs %{running: false, stage: :break, remaining: 43, due_at: "2025-01-29T23:03:00Z", finished_at: "2025-01-29T23:03:00Z"}
+  @invalid_attrs %{running: false, stage: nil, remaining: nil, due_at: nil, finished_at: nil}
 
   defp create_pomodoro(_) do
     pomodoro = pomodoro_fixture()

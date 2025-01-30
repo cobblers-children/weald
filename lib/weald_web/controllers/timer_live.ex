@@ -2,11 +2,25 @@ defmodule WealdWeb.TimerLive do
   use WealdWeb, :live_view
 
   alias Weald.Pomodori
+  alias Weald.Pomodori.Pomodoro
+
 
   def mount(_params, _session, socket) do
-    {:ok, socket
-      |> resetClock()
-    }
+    results = Pomodori.find_running()
+    pomodoro = List.first(results, %Pomodoro{})
+
+    pomodoro = update_remaining(pomodoro)
+    socket = socket |> resetClock(pomodoro)
+
+    if (pomodoro.running) do
+      if (pomodoro.remaining > 0) do
+        {:ok, socket |> startTimer()}
+      else
+        {:ok, socket |> finishTimer()}
+      end
+    else
+      {:ok, socket}
+    end
   end
 
   def render(assigns) do
@@ -15,13 +29,13 @@ defmodule WealdWeb.TimerLive do
       <.link
         phx-click={WealdWeb.CoreComponents.show_modal("timer-modal")}
       >
-        <div :if={!@mini}>
+        <div :if={@pomodoro.id == nil}>
           New Pomodoro
         </div>
-        <div :if={@mini}
+        <div :if={@pomodoro.id}
           class={["time",
-                  @phase,
-                  @paused && "animate-pulse"
+                  @pomodoro.stage,
+                  !@pomodoro.running && "animate-pulse"
                 ]}
         >
           <div class="text-2xl tabular-nums">
@@ -31,7 +45,7 @@ defmodule WealdWeb.TimerLive do
       </.link>
 
       <.modal id="timer-modal">
-        <div class={["time", @phase, "text-6xl sm:text-9xl text-right tabular-nums"]} phx-click={@action}>
+        <div class={["time", @pomodoro.stage, "text-6xl sm:text-9xl text-right tabular-nums"]} phx-click={@action}>
           <%= @text %>
         </div>
         <div class="text-right">
@@ -43,28 +57,7 @@ defmodule WealdWeb.TimerLive do
   end
 
   def handle_event("start", _params, socket) do
-    if (!Map.has_key?(socket.assigns, "pomodoro")) do
-      remaining = socket.assigns.seconds
-
-      data = %{
-        remaining: remaining,
-        due_at: DateTime.add(DateTime.utc_now(), remaining)
-      }
-
-      case Pomodori.create_pomodoro(data) do
-        {:ok, pomodoro} ->
-          {:noreply, socket
-                     |> assign(:pomodoro, pomodoro)
-                     |> startTimer()}
-
-        {:error, %Ecto.Changeset{} = changeset} ->
-          IO.inspect(changeset)
-          {:noreply, socket}
-      end
-    else
-#      TODO: calculate unpause time
-      {:noreply, startTimer(socket)}
-    end
+    {:noreply, startTimer(socket)}
   end
 
   def handle_event("pause", _params, socket) do
@@ -91,37 +84,46 @@ defmodule WealdWeb.TimerLive do
 
     {_ok, timer} = :timer.send_interval(1000, self(), :tick)
 
+    pomodoro = socket.assigns.pomodoro
+    due = DateTime.add(DateTime.utc_now(), pomodoro.remaining)
+
     %{socket | private: Map.put(socket.private, :timer, timer)}
-      |> assign(%{ prompt: "Pause", action: "pause", mini: true, paused: false })
+      |> save_pomodoro(%{running: true, due_at: due})
   end
 
   def finishTimer(socket) do
-    if (socket.assigns.phase == "pomodoro") do
-      cancelTimer(socket)
-        |> assign(%{ prompt: "Start Break", action: "start", phase: "break" })
-        |> setTime(5 * 60)
-        |> push_event("timer-end", %{message: "Time for a break."})
-    else
-      cancelTimer(socket)
-        |> resetClock()
-        |> push_event("timer-end", %{message: "Break time is over."})
-    end
-
+    finishTimer(socket, socket.assigns.pomodoro.stage)
   end
 
-  def resetClock(socket) do
+  def finishTimer(socket, :pomodoro) do
+    cancelTimer(socket)
+      |> setTime(5 * 60)
+      |> save_pomodoro(%{ stage: :break, running: false, remaining: 5 * 60})
+      |> push_event("timer-end", %{message: "Time for a break."})
+  end
+
+  def finishTimer(socket, :break) do
+    cancelTimer(socket)
+      |> save_pomodoro(%{ stage: :done, running: false, remaining: 0, finished_at: DateTime.utc_now()})
+      |> resetClock()
+      |> push_event("timer-end", %{message: "Break time is over."})
+  end
+
+  def resetClock(socket, pomodoro \\ %Pomodoro{}) do
     socket
-      |> assign(%{ prompt: "Start Pomodoro", action: "start", phase: "pomodoro", mini: false})
-      |> setTime(25 * 60)
+      |> assign(:pomodoro, pomodoro)
+      |> setTime(pomodoro.remaining)
+      |> setPrompts
   end
 
   def pauseResume(socket) do
     if (socket.private[:timer]) do
       socket
+        |> save_pomodoro(%{ running: false, remaining: socket.assigns.seconds })
         |> cancelTimer()
-        |> assign(%{ prompt: "Resume", action: "pause", paused: true })
     else
-      startTimer(socket)
+      socket
+        |> startTimer()
     end
   end
 
@@ -134,4 +136,48 @@ defmodule WealdWeb.TimerLive do
       socket
     end
   end
+
+  defp setPrompts(socket) do
+    pomodoro = socket.assigns.pomodoro
+
+    attrs =
+      cond do
+        (pomodoro.running) -> %{ prompt: "Pause", action: "pause"}
+        (pomodoro.due_at) ->  %{ prompt: "Resume", action: "pause" }
+        (pomodoro.stage == :break) -> %{ prompt: "Start Break", action: "start"}
+        true -> %{ prompt: "Start Pomodoro", action: "start"}
+      end
+
+    socket |> assign(attrs)
+  end
+
+#  Update fields in a pomodoro found in the database
+  defp update_remaining(pomodoro) do
+    if (pomodoro.running) do
+      remaining = max(0, DateTime.diff(pomodoro.due_at, DateTime.utc_now()))
+
+      Map.put(pomodoro, :remaining, remaining)
+    else
+      pomodoro
+    end
+  end
+
+  defp save_pomodoro(socket, attrs) do
+    pomodoro = socket.assigns.pomodoro
+
+    results =
+    if (pomodoro.id == nil) do
+      Pomodori.create_pomodoro(attrs)
+    else
+      Pomodori.update_pomodoro(pomodoro, attrs)
+    end
+
+    {_ok, updated} = results
+
+    socket
+      |> assign(pomodoro: updated)
+      |> setPrompts()
+  end
+
+  defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 end

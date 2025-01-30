@@ -3,7 +3,9 @@ defmodule Weald.Pomodori.Pomodoro do
   import Ecto.Changeset
 
   schema "pomodoro" do
-    field :remaining, :integer
+    field :running, :boolean, default: false
+    field :stage, Ecto.Enum, values: [:pomodoro, :break, :done, :cancelled], default: :pomodoro
+    field :remaining, :integer, default: 25 * 60
     field :due_at, :utc_datetime
     field :finished_at, :utc_datetime
 
@@ -12,8 +14,15 @@ defmodule Weald.Pomodori.Pomodoro do
 
   @doc false
   def changeset(pomodoro, attrs) do
-    pomodoro
-    |> cast(attrs, [:remaining, :due_at, :finished_at])
-    |> validate_required([:remaining, :due_at])
+    updated = cast(pomodoro, attrs, [:running, :stage, :remaining, :due_at, :finished_at])
+
+    cond do
+      pomodoro.stage in [:done] ->
+        validate_required(updated, [:stage, :finished_at])
+      pomodoro.running ->
+        validate_required(updated, [:stage, :remaining, :due_at])
+      true ->
+        validate_required(updated, [:stage, :remaining])
+    end
   end
 end

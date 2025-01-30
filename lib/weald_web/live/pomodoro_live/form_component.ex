@@ -9,7 +9,6 @@ defmodule WealdWeb.PomodoroLive.FormComponent do
     <div>
       <.header>
         <%= @title %>
-        <:subtitle>Use this form to manage pomodoro records in your database.</:subtitle>
       </.header>
 
       <.simple_form
@@ -19,22 +18,23 @@ defmodule WealdWeb.PomodoroLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
+        <.input
+          field={@form[:stage]}
+          type="select"
+          label="Stage"
+          prompt="Choose a value"
+          options={Ecto.Enum.values(Weald.Pomodori.Pomodoro, :stage)}
+        />
+        <.input field={@form[:running]} type="checkbox" label="Running" />
         <.input field={@form[:remaining]} type="number" label="Remaining" />
         <.input field={@form[:due_at]} type="datetime-local" label="Due at" />
         <.input field={@form[:finished_at]} type="datetime-local" label="Finished at" />
+        <:actions>
+          <.button phx-disable-with="Saving...">Save Pomodoro</.button>
+        </:actions>
       </.simple_form>
     </div>
     """
-  end
-
-  @impl true
-  def update(%{pomodoro: pomodoro} = assigns, socket) do
-    {:ok,
-     socket
-     |> assign(assigns)
-     |> assign_new(:form, fn ->
-       to_form(Pomodori.change_pomodoro(pomodoro))
-     end)}
   end
 
   @impl true

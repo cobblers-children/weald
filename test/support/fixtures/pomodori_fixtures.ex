@@ -35,4 +35,22 @@ defmodule Weald.PomodoriFixtures do
 
     pomodoro
   end
+
+  @doc """
+  Generate a pomodoro.
+  """
+  def pomodoro_fixture(attrs \\ %{}) do
+    {:ok, pomodoro} =
+      attrs
+      |> Enum.into(%{
+        due_at: ~U[2025-01-28 23:03:00Z],
+        finished_at: ~U[2025-01-28 23:03:00Z],
+        remaining: 42,
+        running: true,
+        stage: :pomodoro
+      })
+      |> Weald.Pomodori.create_pomodoro()
+
+    pomodoro
+  end
 end

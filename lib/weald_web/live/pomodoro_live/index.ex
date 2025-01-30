@@ -2,7 +2,6 @@ defmodule WealdWeb.PomodoroLive.Index do
   use WealdWeb, :live_view
 
   alias Weald.Pomodori
-  alias Weald.Pomodori.Pomodoro
 
   @impl true
   def mount(_params, _session, socket) do
@@ -16,7 +15,7 @@ defmodule WealdWeb.PomodoroLive.Index do
 
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
-    |> assign(:page_title, "Edit Pomodoro")
+    |> assign(:page_title, "Show Pomodoro")
     |> assign(:pomodoro, Pomodori.get_pomodoro!(id))
   end
 
@@ -29,13 +28,5 @@ defmodule WealdWeb.PomodoroLive.Index do
   @impl true
   def handle_info({WealdWeb.PomodoroLive.FormComponent, {:saved, pomodoro}}, socket) do
     {:noreply, stream_insert(socket, :pomodoro_collection, pomodoro)}
-  end
-
-  @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
-    pomodoro = Pomodori.get_pomodoro!(id)
-    {:ok, _} = Pomodori.delete_pomodoro(pomodoro)
-
-    {:noreply, stream_delete(socket, :pomodoro_collection, pomodoro)}
   end
 end

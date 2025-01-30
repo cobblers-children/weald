@@ -1,14 +1,10 @@
 <.header>
   Pomodoro <%= @pomodoro.id %>
-  <:subtitle>This is a pomodoro record from your database.</:subtitle>
-  <:actions>
-    <.link patch={~p"/pomodoro/#{@pomodoro}/show/edit"} phx-click={JS.push_focus()}>
-      <.button>Edit pomodoro</.button>
-    </.link>
-  </:actions>
 </.header>
 
 <.list>
+  <:item title="Stage"><%= @pomodoro.stage %></:item>
+  <:item title="Running"><%= @pomodoro.running %></:item>
   <:item title="Remaining"><%= @pomodoro.remaining %></:item>
   <:item title="Due at"><%= @pomodoro.due_at %></:item>
   <:item title="Finished at"><%= @pomodoro.finished_at %></:item>
