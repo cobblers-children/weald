@@ -9,6 +9,10 @@
     padding: .75em 0.5em;
 }
 
+td {
+    max-width: 300px;
+}
+
 .pomodoro {
     background-color: #ee7777;
 }

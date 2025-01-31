@@ -13,7 +13,7 @@
   row_click={fn {_id, task} -> JS.navigate(~p"/tasks/#{task}") end}
 >
   <:col :let={{_id, task}} label="Title"><%= task.title %></:col>
-  <:col :let={{_id, task}} label="Description"><%= task.description %></:col>
+  <:col :let={{_id, task}} label="Description"><div class="truncate" title={task.description}><%= task.description %></div></:col>
   <:col :let={{_id, task}} label="Status"><%= task.status %></:col>
   <:col :let={{_id, task}} label="Created at"><%= task.inserted_at %></:col>
   <:col :let={{_id, task}} label="Started at"><%= task.started_at %></:col>
