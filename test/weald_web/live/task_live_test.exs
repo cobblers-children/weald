@@ -4,9 +4,9 @@ defmodule WealdWeb.TaskLiveTest do
   import Phoenix.LiveViewTest
   import Weald.TasksFixtures
 
-  @create_attrs %{status: :todo, description: "some description", started_at: "2025-01-23T04:11:00Z", created_at: "2025-01-23T04:11:00Z", finished_at: "2025-01-23T04:11:00Z"}
-  @update_attrs %{status: :started, description: "some updated description", started_at: "2025-01-24T04:11:00Z", created_at: "2025-01-24T04:11:00Z", finished_at: "2025-01-24T04:11:00Z"}
-  @invalid_attrs %{status: nil, description: nil, started_at: nil, created_at: nil, finished_at: nil}
+  @create_attrs %{description: "some description", started_at: "2025-01-29T23:13:00Z", title: "some title", completed: :new, created_at: "2025-01-29T23:13:00Z", finished_at: "2025-01-29T23:13:00Z"}
+  @update_attrs %{description: "some updated description", started_at: "2025-01-30T23:13:00Z", title: "some updated title", completed: :started, created_at: "2025-01-30T23:13:00Z", finished_at: "2025-01-30T23:13:00Z"}
+  @invalid_attrs %{description: nil, started_at: nil, title: nil, completed: nil, created_at: nil, finished_at: nil}
 
   defp create_task(_) do
     task = task_fixture()

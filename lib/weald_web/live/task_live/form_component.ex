@@ -13,13 +13,13 @@ defmodule WealdWeb.TaskLive.FormComponent do
       </.header>
 
       <.simple_form
-        :if={@action in [:new, :edit]}
         for={@form}
         id="task-form"
         phx-target={@myself}
         phx-change="validate"
         phx-submit="save"
       >
+        <.input field={@form[:title]} type="text" label="Title" />
         <.input field={@form[:description]} type="text" label="Description" />
         <.input
           field={@form[:status]}
@@ -30,28 +30,6 @@ defmodule WealdWeb.TaskLive.FormComponent do
         />
         <:actions>
           <.button phx-disable-with="Saving...">Save Task</.button>
-        </:actions>
-      </.simple_form>
-
-      <.simple_form
-        :if={@action in [:delete]}
-        for={@form}
-        id="task-form"
-        phx-target={@myself}
-        phx-value-id={@myself}
-        phx-submit="delete"
-      >
-        <.input field={@form[:description]} type="text" label="Description" disabled/>
-        <.input
-          field={@form[:status]}
-          disabled
-          type="select"
-          label="Status"
-          prompt="Choose a value"
-          options={Ecto.Enum.values(Weald.Tasks.Task, :status)}
-        />
-        <:actions>
-          <.button phx-disable-with="Deleting...">Delete Task</.button>
         </:actions>
       </.simple_form>
     </div>
@@ -78,10 +56,6 @@ defmodule WealdWeb.TaskLive.FormComponent do
     save_task(socket, socket.assigns.action, task_params)
   end
 
-  def handle_event("delete", _params, socket) do
-    save_task(socket, :delete)
-  end
-
   defp save_task(socket, :edit, task_params) do
     case Tasks.update_task(socket.assigns.task, task_params) do
       {:ok, task} ->
@@ -90,8 +64,7 @@ defmodule WealdWeb.TaskLive.FormComponent do
         {:noreply,
          socket
          |> put_flash(:info, "Task updated successfully")
-         |> push_patch(to: socket.assigns.patch)
-        }
+         |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}
@@ -113,21 +86,5 @@ defmodule WealdWeb.TaskLive.FormComponent do
     end
   end
 
-  defp save_task(socket, :delete) do
-    case Tasks.delete_task(socket.assigns.task) do
-      {:ok, task} ->
-        notify_parent({:deleted, task})
-
-        {:noreply,
-          socket
-          |> put_flash(:info, "Task deleted successfully")
-          |> push_patch(to: socket.assigns.patch)
-        }
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, form: to_form(changeset))}
-    end
-  end
-  
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 end

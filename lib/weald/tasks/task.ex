@@ -3,8 +3,9 @@ defmodule Weald.Tasks.Task do
   import Ecto.Changeset
 
   schema "tasks" do
-    field :status, Ecto.Enum, values: [:todo, :started, :done], default: :todo
+    field :title, :string
     field :description, :string
+    field :status, Ecto.Enum, values: [:todo, :started, :done], default: :todo
     field :started_at, :utc_datetime
     field :finished_at, :utc_datetime
 
@@ -14,7 +15,7 @@ defmodule Weald.Tasks.Task do
   @doc false
   def changeset(task, attrs) do
     task
-    |> cast(attrs, [:description, :status])
-    |> validate_required([:description, :status])
+    |> cast(attrs, [:title, :description, :status])
+    |> validate_required([:title, :description, :status])
   end
 end

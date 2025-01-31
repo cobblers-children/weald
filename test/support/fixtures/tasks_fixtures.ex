@@ -21,4 +21,23 @@ defmodule Weald.TasksFixtures do
 
     task
   end
+
+  @doc """
+  Generate a task.
+  """
+  def task_fixture(attrs \\ %{}) do
+    {:ok, task} =
+      attrs
+      |> Enum.into(%{
+        completed: :new,
+        created_at: ~U[2025-01-29 23:13:00Z],
+        description: "some description",
+        finished_at: ~U[2025-01-29 23:13:00Z],
+        started_at: ~U[2025-01-29 23:13:00Z],
+        title: "some title"
+      })
+      |> Weald.Tasks.create_task()
+
+    task
+  end
 end

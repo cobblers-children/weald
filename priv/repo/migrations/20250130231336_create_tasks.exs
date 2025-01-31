@@ -3,6 +3,7 @@ defmodule Weald.Repo.Migrations.CreateTasks do
 
   def change do
     create table(:tasks) do
+      add :title, :text
       add :description, :text
       add :status, :string
       add :started_at, :utc_datetime
