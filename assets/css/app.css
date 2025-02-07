@@ -5,6 +5,11 @@
 /* This file is for your main application CSS */
 
 .time {
+    border-radius: 3px;
+    padding: .1rem .4rem;
+}
+
+.time.large {
     border-radius: 8px;
     padding: .75em 0.5em;
 }

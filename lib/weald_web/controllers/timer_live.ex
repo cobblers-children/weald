@@ -45,7 +45,7 @@ defmodule WealdWeb.TimerLive do
       </.link>
 
       <.modal id="timer-modal">
-        <div class={["time", @pomodoro.stage, "text-6xl sm:text-9xl text-right tabular-nums"]} phx-click={@action}>
+        <div class={["time large", @pomodoro.stage, "text-6xl sm:text-9xl text-right tabular-nums"]} phx-click={@action}>
           <%= @text %>
         </div>
         <div class="text-right">
