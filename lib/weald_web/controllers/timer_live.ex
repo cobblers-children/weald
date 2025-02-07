@@ -49,7 +49,7 @@ defmodule WealdWeb.TimerLive do
           <%= @text %>
         </div>
         <div class="text-right">
-          <button id="pomodoro" phx-click={@action} phx-hook="Countdown" class="text-2xl"><%= @prompt %></button>
+          <button id="pomodoro-button" phx-click={@action} phx-hook="Countdown" class="text-2xl"><%= @prompt %></button>
         </div>
       </.modal>
     </div>
