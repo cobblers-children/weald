@@ -17,7 +17,7 @@ defmodule WealdWeb.Router do
   scope "/", WealdWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    live "/", HomeLive, :index
 
     live "/pomodoro", PomodoroLive.Index, :index
     live "/pomodoro/:id/edit", PomodoroLive.Index, :edit

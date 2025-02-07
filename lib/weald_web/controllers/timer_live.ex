@@ -178,6 +178,4 @@ defmodule WealdWeb.TimerLive do
       |> assign(pomodoro: updated)
       |> setPrompts()
   end
-
-  defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 end
