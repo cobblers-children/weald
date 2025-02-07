@@ -2,9 +2,23 @@
 <header class="px-4 sm:px-6 lg:px-8">
   <div class="flex items-center justify-between border-b border-zinc-100 py-3 text-sm">
     <div class="flex items-center gap-4">
+      <a href="/">
+        <img src={~p"/images/logo.svg"} width="36" />
+      </a>
+      <span class="bg-brand/5 text-brand text-2xl rounded-full font-semibold">
+        Weald
+      </span>
     </div>
-    <div class="flex items-center gap-4 font-semibold leading-6 text-zinc-900">
-      <%= assigns[:socket] && live_render(@socket, WealdWeb.TimerLive, id: "timer") %>
+    <div class="flex items-center gap-4 text-lg font-semibold leading-6 text-zinc-900">
+      <div>
+        <.link navigate={~p"/tasks/"}>Tasks</.link>
+      </div>
+      <div>
+        <.link navigate={~p"/pomodoro/"}>Pomodori</.link>
+      </div>
+      <div>
+        <%= assigns[:socket] && live_render(@socket, WealdWeb.TimerLive, id: "timer") %>
+      </div>
     </div>
   </div>
 </header>
@@ -17,9 +31,6 @@
 <footer class="px-4 sm:px-6 lg:px-8">
   <div class="flex items-center justify-between border-b border-zinc-100 py-3 text-sm">
     <div class="flex items-center gap-4">
-      <a href="/">
-        <img src={~p"/images/logo.svg"} width="36" />
-      </a>
       <span class="bg-brand/5 text-brand rounded-full font-medium">
         Weald v<%= Application.spec(:weald, :vsn) %>
       </span>

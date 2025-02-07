@@ -28,7 +28,7 @@ defmodule WealdWeb.TaskLive.Index do
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "Listing Tasks")
+    |> assign(:page_title, "Tasks")
     |> assign(:task, nil)
   end
 
